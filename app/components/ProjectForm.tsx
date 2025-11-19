@@ -93,7 +93,7 @@ export default function ProjectForm({ nickname, onSubmit }: ProjectFormProps) {
         <div className="space-y-4">
           <div>
             <label htmlFor="projectName" className="mb-1 block text-sm font-medium text-gray-700">
-              案件名 <span className="text-red-500">*</span>
+              案件名 (必須)
             </label>
             <input
               type="text"
@@ -110,7 +110,7 @@ export default function ProjectForm({ nickname, onSubmit }: ProjectFormProps) {
 
           <div>
             <label htmlFor="phoneNumber" className="mb-1 block text-sm font-medium text-gray-700">
-              電話番号 <span className="text-red-500">*</span>
+              電話番号 (必須)
             </label>
             <input
               type="tel"
@@ -127,7 +127,7 @@ export default function ProjectForm({ nickname, onSubmit }: ProjectFormProps) {
 
           <div>
             <label htmlFor="price" className="mb-1 block text-sm font-medium text-gray-700">
-              料金 <span className="text-red-500">*</span>
+              料金 (必須)
             </label>
             <input
               type="text"
@@ -144,7 +144,7 @@ export default function ProjectForm({ nickname, onSubmit }: ProjectFormProps) {
 
           <div>
             <label htmlFor="description" className="mb-1 block text-sm font-medium text-gray-700">
-              概要 <span className="text-red-500">*</span>
+              概要 (必須)
             </label>
             <textarea
               id="description"

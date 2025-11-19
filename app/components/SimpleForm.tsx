@@ -22,17 +22,24 @@ export default function SimpleForm({ nickname, tab, onSubmit }: SimpleFormProps)
     firstMessageTime: 0,
   });
   const [remainingBlockTime, setRemainingBlockTime] = useState(0);
+  const [isBlocked, setIsBlocked] = useState<boolean>(false);
 
-  // Update remaining block time
+  // Update remaining block time and isBlocked state
   useEffect(() => {
     if (!rateLimit.blockedUntil) {
       setRemainingBlockTime(0);
+      setIsBlocked(false);
       return;
     }
 
     const updateTimer = () => {
-      const remaining = Math.max(0, rateLimit.blockedUntil! - Date.now());
+      const now = Date.now();
+      const remaining = Math.max(0, rateLimit.blockedUntil! - now);
       setRemainingBlockTime(remaining);
+      
+      // Update isBlocked state based on remaining time
+      const blocked = rateLimit.blockedUntil !== undefined && now < rateLimit.blockedUntil;
+      setIsBlocked(blocked);
 
       if (remaining === 0) {
         setRateLimit(prev => ({
@@ -40,6 +47,7 @@ export default function SimpleForm({ nickname, tab, onSubmit }: SimpleFormProps)
           blockedUntil: undefined,
           count: 0,
         }));
+        setIsBlocked(false);
       }
     };
 
@@ -57,6 +65,13 @@ export default function SimpleForm({ nickname, tab, onSubmit }: SimpleFormProps)
       try {
         const data = JSON.parse(stored);
         setRateLimit(data);
+        // Update isBlocked state based on loaded data
+        if (data.blockedUntil) {
+          const blocked = Date.now() < data.blockedUntil;
+          setIsBlocked(blocked);
+        } else {
+          setIsBlocked(false);
+        }
       } catch (e) {
         console.error('Failed to load rate limit:', e);
       }
@@ -95,6 +110,7 @@ export default function SimpleForm({ nickname, tab, onSubmit }: SimpleFormProps)
         ...prev,
         blockedUntil,
       }));
+      setIsBlocked(true);
       setError(`連投が多すぎます。${BLOCK_DURATION / 1000}秒間投稿できません。`);
       return false;
     }
@@ -132,8 +148,6 @@ export default function SimpleForm({ nickname, tab, onSubmit }: SimpleFormProps)
     setContent('');
     setError('');
   };
-
-  const isBlocked = rateLimit.blockedUntil && Date.now() < rateLimit.blockedUntil;
 
   return (
     <div className="flex h-full flex-col">
@@ -180,7 +194,7 @@ export default function SimpleForm({ nickname, tab, onSubmit }: SimpleFormProps)
 
         <div className="mt-4 rounded-lg bg-yellow-50 p-3">
           <p className="text-xs text-yellow-800">
-            ⚠️ {RATE_LIMIT_WINDOW / 1000}秒間に{RATE_LIMIT_MESSAGES}件以上送信すると、
+            注意: {RATE_LIMIT_WINDOW / 1000}秒間に{RATE_LIMIT_MESSAGES}件以上送信すると、
             {BLOCK_DURATION / 1000}秒間投稿できなくなります。
           </p>
         </div>
