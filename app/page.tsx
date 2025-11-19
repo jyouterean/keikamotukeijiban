@@ -27,16 +27,19 @@ export default function Home() {
           console.error('Failed to load account:', e);
         }
       }
-      setAppState('chat');
-    } else {
-      setAppState('setup');
     }
+    // Always show chat board (even without nickname)
+    setAppState('chat');
   }, []);
 
   const handleNicknameComplete = (newNickname: string) => {
     localStorage.setItem('nickname', newNickname);
     setNickname(newNickname);
     setAppState('chat');
+  };
+
+  const handleShowNicknameSetup = () => {
+    setAppState('setup');
   };
 
   const handleShowAccountForm = () => {
@@ -69,7 +72,7 @@ export default function Home() {
       localStorage.removeItem('account');
       setNickname(null);
       setAccount(null);
-      setAppState('setup');
+      // Stay on chat page after logout
     }
   };
 
@@ -99,16 +102,13 @@ export default function Home() {
     );
   }
 
-  if (nickname) {
-    return (
-      <ChatBoard 
-        nickname={nickname}
-        account={account}
-        onLogout={handleLogout}
-        onCreateAccount={handleCreateAccount}
-      />
-    );
-  }
-
-  return null;
+  return (
+    <ChatBoard 
+      nickname={nickname}
+      account={account}
+      onLogout={handleLogout}
+      onCreateAccount={handleCreateAccount}
+      onShowNicknameSetup={handleShowNicknameSetup}
+    />
+  );
 }
