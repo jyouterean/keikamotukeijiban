@@ -88,12 +88,6 @@ export default function ChatBoard({ nickname, account, onLogout, onCreateAccount
   };
 
   const handleOpenThread = (message: ProjectMessage) => {
-    // Check if nickname exists
-    if (!nickname) {
-      onShowNicknameSetup();
-      return;
-    }
-    
     // Find the latest version of the message
     const latestMessage = messages.find(m => m.id === message.id) as ProjectMessage;
     setSelectedThread(latestMessage || message);
@@ -101,7 +95,7 @@ export default function ChatBoard({ nickname, account, onLogout, onCreateAccount
 
   const filteredMessages = messages.filter(msg => msg.tab === activeTab);
 
-  const tabs: ChatTab[] = ['案件', '雑談', '詐欺'];
+  const tabs: ChatTab[] = ['案件', '雑談'];
 
   return (
     <div className="flex h-screen flex-col bg-gray-50">
@@ -135,28 +129,22 @@ export default function ChatBoard({ nickname, account, onLogout, onCreateAccount
               </div>
               {/* Bottom Row */}
               <div className="flex items-center justify-between text-sm">
-                {nickname ? (
-                  <>
-                    <div className="flex items-center gap-2">
-                      <span className="text-gray-600">ネーム:</span>
-                      <span className="font-semibold text-gray-800">{nickname}</span>
-                      {account?.verified && (
-                        <svg className="h-4 w-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                        </svg>
-                      )}
-                    </div>
-                    {!account && (
-                      <button
-                        onClick={onCreateAccount}
-                        className="text-indigo-600 hover:text-indigo-700"
-                      >
-                        作成
-                      </button>
-                    )}
-                  </>
-                ) : (
-                  <div className="text-gray-500 text-xs">投稿するにはニックネームを設定してください</div>
+                <div className="flex items-center gap-2">
+                  <span className="text-gray-600">ネーム:</span>
+                  <span className="font-semibold text-gray-800">{nickname || '未設定'}</span>
+                  {account?.verified && (
+                    <svg className="h-4 w-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                </div>
+                {!account && nickname && (
+                  <button
+                    onClick={onCreateAccount}
+                    className="text-indigo-600 hover:text-indigo-700"
+                  >
+                    作成
+                  </button>
                 )}
               </div>
             </div>
@@ -165,41 +153,37 @@ export default function ChatBoard({ nickname, account, onLogout, onCreateAccount
             <div className="flex items-center justify-between py-1">
               <h1 className="text-2xl font-bold text-gray-800">軽貨物掲示板</h1>
               <div className="flex items-center gap-4">
-                {nickname ? (
-                  <>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-600">ニックネーム:</span>
-                      <span className="font-semibold text-gray-800">{nickname}</span>
-                      {account?.verified && (
-                        <svg className="h-5 w-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                        </svg>
-                      )}
-                    </div>
-                    {account ? (
-                      <button
-                        onClick={() => setIsAccountModalOpen(true)}
-                        className="rounded-lg bg-indigo-50 px-4 py-2 text-sm font-medium text-indigo-600 transition-colors hover:bg-indigo-100"
-                      >
-                        アカウント
-                      </button>
-                    ) : (
-                      <button
-                        onClick={onCreateAccount}
-                        className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700"
-                      >
-                        アカウント作成
-                      </button>
-                    )}
-                    <button
-                      onClick={onLogout}
-                      className="rounded-lg bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-300"
-                    >
-                      ログアウト
-                    </button>
-                  </>
-                ) : (
-                  <div className="text-gray-500 text-sm">投稿するにはニックネームを設定してください</div>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-gray-600">ニックネーム:</span>
+                  <span className="font-semibold text-gray-800">{nickname || '未設定'}</span>
+                  {account?.verified && (
+                    <svg className="h-5 w-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                </div>
+                {account ? (
+                  <button
+                    onClick={() => setIsAccountModalOpen(true)}
+                    className="rounded-lg bg-indigo-50 px-4 py-2 text-sm font-medium text-indigo-600 transition-colors hover:bg-indigo-100"
+                  >
+                    アカウント
+                  </button>
+                ) : nickname && (
+                  <button
+                    onClick={onCreateAccount}
+                    className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700"
+                  >
+                    アカウント作成
+                  </button>
+                )}
+                {nickname && (
+                  <button
+                    onClick={onLogout}
+                    className="rounded-lg bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-300"
+                  >
+                    ログアウト
+                  </button>
                 )}
               </div>
             </div>
@@ -242,13 +226,13 @@ export default function ChatBoard({ nickname, account, onLogout, onCreateAccount
           />
 
           {/* Input Form Area (PC only) */}
-          {!isMobile && nickname && (
+          {!isMobile && (
             <div className="w-96 border-l border-gray-200 bg-white">
               {activeTab === '案件' ? (
-                <ProjectForm nickname={nickname} onSubmit={handleAddMessage} />
+                <ProjectForm nickname={nickname || ''} onSubmit={handleAddMessage} />
               ) : (
                 <SimpleForm 
-                  nickname={nickname} 
+                  nickname={nickname || ''} 
                   tab={activeTab} 
                   onSubmit={handleAddMessage}
                 />
@@ -261,13 +245,7 @@ export default function ChatBoard({ nickname, account, onLogout, onCreateAccount
       {/* Mobile Floating Button */}
       {isMobile && (
         <button
-          onClick={() => {
-            if (!nickname) {
-              onShowNicknameSetup();
-            } else {
-              setIsMobileFormOpen(true);
-            }
-          }}
+          onClick={() => setIsMobileFormOpen(true)}
           className="fixed bottom-6 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-indigo-600 text-white shadow-lg transition-transform hover:scale-110 active:scale-95"
         >
           <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -277,23 +255,21 @@ export default function ChatBoard({ nickname, account, onLogout, onCreateAccount
       )}
 
       {/* Mobile Form Modal */}
-      {nickname && (
-        <MobileFormModal
-          isOpen={isMobileFormOpen}
-          onClose={() => setIsMobileFormOpen(false)}
-          nickname={nickname}
-          activeTab={activeTab}
-          onSubmit={handleAddMessage}
-        />
-      )}
+      <MobileFormModal
+        isOpen={isMobileFormOpen}
+        onClose={() => setIsMobileFormOpen(false)}
+        nickname={nickname || ''}
+        activeTab={activeTab}
+        onSubmit={handleAddMessage}
+      />
 
       {/* Thread Modal */}
-      {selectedThread && nickname && (
+      {selectedThread && (
         <ThreadModal
           isOpen={!!selectedThread}
           onClose={() => setSelectedThread(null)}
           message={selectedThread}
-          nickname={nickname}
+          nickname={nickname || ''}
           onAddComment={handleAddThreadComment}
         />
       )}

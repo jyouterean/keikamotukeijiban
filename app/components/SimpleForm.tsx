@@ -5,7 +5,7 @@ import { ChatTab, SimpleMessage, RateLimitInfo } from '../types';
 
 interface SimpleFormProps {
   nickname: string;
-  tab: '雑談' | '詐欺';
+  tab: '雑談';
   onSubmit: (message: SimpleMessage) => void;
 }
 

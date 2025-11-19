@@ -1,4 +1,4 @@
-export type ChatTab = '案件' | '雑談' | '詐欺';
+export type ChatTab = '案件' | '雑談';
 export type AccountType = 'company' | 'driver';
 
 export interface CompanyAccount {
@@ -50,7 +50,7 @@ export interface ProjectMessage extends BaseMessage {
 }
 
 export interface SimpleMessage extends BaseMessage {
-  tab: '雑談' | '詐欺';
+  tab: '雑談';
   content: string;
 }
 
