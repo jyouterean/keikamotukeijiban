@@ -10,6 +10,7 @@ import MobileFormModal from './MobileFormModal';
 import MobileSimpleForm from './MobileSimpleForm';
 import AccountModal from './AccountModal';
 import { useIsMobile } from '../hooks/useMediaQuery';
+import { getAccountByNickname } from '../utils/accountStorage';
 
 interface ChatBoardProps {
   nickname: string | null;
@@ -25,6 +26,7 @@ export default function ChatBoard({ nickname, account, onLogout, onCreateAccount
   const [selectedThread, setSelectedThread] = useState<ProjectMessage | null>(null);
   const [isMobileFormOpen, setIsMobileFormOpen] = useState(false);
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
+  const [viewingAccount, setViewingAccount] = useState<UserAccount | null>(null);
   const isMobile = useIsMobile();
 
   // Load messages from localStorage
@@ -92,6 +94,13 @@ export default function ChatBoard({ nickname, account, onLogout, onCreateAccount
     // Find the latest version of the message
     const latestMessage = messages.find(m => m.id === message.id) as ProjectMessage;
     setSelectedThread(latestMessage || message);
+  };
+
+  const handleViewAccount = (nicknameToView: string) => {
+    const accountToView = getAccountByNickname(nicknameToView);
+    if (accountToView) {
+      setViewingAccount(accountToView);
+    }
   };
 
   const filteredMessages = messages.filter(msg => msg.tab === activeTab);
@@ -226,6 +235,8 @@ export default function ChatBoard({ nickname, account, onLogout, onCreateAccount
                 messages={filteredMessages} 
                 activeTab={activeTab}
                 onOpenThread={handleOpenThread}
+                canViewAccounts={account?.verified || false}
+                onViewAccount={handleViewAccount}
               />
             </div>
             <MobileSimpleForm 
@@ -240,6 +251,8 @@ export default function ChatBoard({ nickname, account, onLogout, onCreateAccount
               messages={filteredMessages} 
               activeTab={activeTab}
               onOpenThread={handleOpenThread}
+              canViewAccounts={account?.verified || false}
+              onViewAccount={handleViewAccount}
             />
 
             {/* Input Form Area (PC only) */}
@@ -291,15 +304,26 @@ export default function ChatBoard({ nickname, account, onLogout, onCreateAccount
           message={selectedThread}
           nickname={nickname || ''}
           onAddComment={handleAddThreadComment}
+          canViewAccounts={account?.verified || false}
+          onViewAccount={handleViewAccount}
         />
       )}
 
-      {/* Account Modal */}
+      {/* Account Modal (Own Account) */}
       {account && (
         <AccountModal
           isOpen={isAccountModalOpen}
           onClose={() => setIsAccountModalOpen(false)}
           account={account}
+        />
+      )}
+
+      {/* Account Modal (Viewing Other's Account) */}
+      {viewingAccount && (
+        <AccountModal
+          isOpen={!!viewingAccount}
+          onClose={() => setViewingAccount(null)}
+          account={viewingAccount}
         />
       )}
     </div>

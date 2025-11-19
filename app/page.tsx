@@ -5,6 +5,7 @@ import NicknameSetup from './components/NicknameSetup';
 import AccountForm from './components/AccountForm';
 import ChatBoard from './components/ChatBoard';
 import { UserAccount } from './types';
+import { saveAccountToGlobal } from './utils/accountStorage';
 
 type AppState = 'loading' | 'setup' | 'accountForm' | 'chat';
 
@@ -49,6 +50,8 @@ export default function Home() {
   const handleAccountFormComplete = (newAccount: UserAccount) => {
     localStorage.setItem('account', JSON.stringify(newAccount));
     localStorage.setItem('nickname', newAccount.nickname);
+    // Save to global accounts storage
+    saveAccountToGlobal(newAccount);
     setAccount(newAccount);
     setNickname(newAccount.nickname);
     setAppState('chat');
