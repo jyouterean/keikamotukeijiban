@@ -6,9 +6,10 @@ import { Message, ChatTab, ProjectMessage, SimpleMessage } from '../types';
 interface MessageListProps {
   messages: Message[];
   activeTab: ChatTab;
+  onOpenThread?: (message: ProjectMessage) => void;
 }
 
-export default function MessageList({ messages, activeTab }: MessageListProps) {
+export default function MessageList({ messages, activeTab, onOpenThread }: MessageListProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Scroll to bottom when new messages arrive
@@ -28,7 +29,7 @@ export default function MessageList({ messages, activeTab }: MessageListProps) {
   const renderProjectMessage = (message: ProjectMessage) => (
     <div key={message.id} className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
       <div className="mb-3 flex items-start justify-between">
-        <div>
+        <div className="flex-1">
           <h3 className="font-semibold text-gray-900">{message.projectName}</h3>
           <p className="mt-1 text-sm text-gray-600">
             投稿者: <span className="font-medium">{message.nickname}</span>
@@ -39,17 +40,26 @@ export default function MessageList({ messages, activeTab }: MessageListProps) {
 
       <div className="space-y-2 border-t border-gray-100 pt-3">
         <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-gray-700">📞 電話番号:</span>
-          <span className="text-sm text-gray-900">{message.phoneNumber}</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-gray-700">💰 料金:</span>
+          <span className="text-sm font-medium text-gray-700">料金:</span>
           <span className="text-sm text-gray-900">{message.price}</span>
         </div>
         <div className="mt-3">
-          <p className="text-sm font-medium text-gray-700">📝 概要:</p>
+          <p className="text-sm font-medium text-gray-700">概要:</p>
           <p className="mt-1 whitespace-pre-wrap text-sm text-gray-900">{message.description}</p>
         </div>
+      </div>
+
+      {/* Thread Button */}
+      <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-3">
+        <span className="text-xs text-gray-500">
+          {message.threadComments?.length || 0} 件のコメント
+        </span>
+        <button
+          onClick={() => onOpenThread?.(message)}
+          className="rounded-lg bg-indigo-50 px-4 py-2 text-sm font-medium text-indigo-600 transition-colors hover:bg-indigo-100"
+        >
+          スレッドを見る
+        </button>
       </div>
     </div>
   );

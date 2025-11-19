@@ -1,10 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ChatTab, Message, ProjectMessage, SimpleMessage } from '../types';
+import { ChatTab, Message, ProjectMessage, SimpleMessage, ThreadComment } from '../types';
 import ProjectForm from './ProjectForm';
 import SimpleForm from './SimpleForm';
 import MessageList from './MessageList';
+import ThreadModal from './ThreadModal';
+import MobileFormModal from './MobileFormModal';
+import { useIsMobile } from '../hooks/useMediaQuery';
 
 interface ChatBoardProps {
   nickname: string;
@@ -14,6 +17,9 @@ interface ChatBoardProps {
 export default function ChatBoard({ nickname, onLogout }: ChatBoardProps) {
   const [activeTab, setActiveTab] = useState<ChatTab>('案件');
   const [messages, setMessages] = useState<Message[]>([]);
+  const [selectedThread, setSelectedThread] = useState<ProjectMessage | null>(null);
+  const [isMobileFormOpen, setIsMobileFormOpen] = useState(false);
+  const isMobile = useIsMobile();
 
   // Load messages from localStorage
   useEffect(() => {
@@ -34,6 +40,35 @@ export default function ChatBoard({ nickname, onLogout }: ChatBoardProps) {
 
   const handleAddMessage = (message: Message) => {
     setMessages(prev => [...prev, message]);
+  };
+
+  const handleAddThreadComment = (messageId: string, comment: ThreadComment) => {
+    setMessages(prev =>
+      prev.map(msg => {
+        if (msg.id === messageId && msg.tab === '案件') {
+          const projectMsg = msg as ProjectMessage;
+          return {
+            ...projectMsg,
+            threadComments: [...(projectMsg.threadComments || []), comment],
+          };
+        }
+        return msg;
+      })
+    );
+
+    // Update selected thread if it's open
+    if (selectedThread && selectedThread.id === messageId) {
+      setSelectedThread(prev => ({
+        ...prev!,
+        threadComments: [...(prev!.threadComments || []), comment],
+      }));
+    }
+  };
+
+  const handleOpenThread = (message: ProjectMessage) => {
+    // Find the latest version of the message
+    const latestMessage = messages.find(m => m.id === message.id) as ProjectMessage;
+    setSelectedThread(latestMessage || message);
   };
 
   const filteredMessages = messages.filter(msg => msg.tab === activeTab);
@@ -88,22 +123,60 @@ export default function ChatBoard({ nickname, onLogout }: ChatBoardProps) {
       <div className="mx-auto flex h-full w-full max-w-6xl flex-col overflow-hidden">
         <div className="flex flex-1 overflow-hidden">
           {/* Messages Area */}
-          <MessageList messages={filteredMessages} activeTab={activeTab} />
+          <MessageList 
+            messages={filteredMessages} 
+            activeTab={activeTab}
+            onOpenThread={handleOpenThread}
+          />
 
-          {/* Input Form Area */}
-          <div className="w-96 border-l border-gray-200 bg-white">
-            {activeTab === '案件' ? (
-              <ProjectForm nickname={nickname} onSubmit={handleAddMessage} />
-            ) : (
-              <SimpleForm 
-                nickname={nickname} 
-                tab={activeTab} 
-                onSubmit={handleAddMessage}
-              />
-            )}
-          </div>
+          {/* Input Form Area (PC only) */}
+          {!isMobile && (
+            <div className="w-96 border-l border-gray-200 bg-white">
+              {activeTab === '案件' ? (
+                <ProjectForm nickname={nickname} onSubmit={handleAddMessage} />
+              ) : (
+                <SimpleForm 
+                  nickname={nickname} 
+                  tab={activeTab} 
+                  onSubmit={handleAddMessage}
+                />
+              )}
+            </div>
+          )}
         </div>
       </div>
+
+      {/* Mobile Floating Button */}
+      {isMobile && (
+        <button
+          onClick={() => setIsMobileFormOpen(true)}
+          className="fixed bottom-6 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-indigo-600 text-white shadow-lg transition-transform hover:scale-110 active:scale-95"
+        >
+          <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+          </svg>
+        </button>
+      )}
+
+      {/* Mobile Form Modal */}
+      <MobileFormModal
+        isOpen={isMobileFormOpen}
+        onClose={() => setIsMobileFormOpen(false)}
+        nickname={nickname}
+        activeTab={activeTab}
+        onSubmit={handleAddMessage}
+      />
+
+      {/* Thread Modal */}
+      {selectedThread && (
+        <ThreadModal
+          isOpen={!!selectedThread}
+          onClose={() => setSelectedThread(null)}
+          message={selectedThread}
+          nickname={nickname}
+          onAddComment={handleAddThreadComment}
+        />
+      )}
     </div>
   );
 }

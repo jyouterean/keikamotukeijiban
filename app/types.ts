@@ -7,12 +7,20 @@ export interface BaseMessage {
   tab: ChatTab;
 }
 
+export interface ThreadComment {
+  id: string;
+  nickname: string;
+  timestamp: number;
+  content: string;
+}
+
 export interface ProjectMessage extends BaseMessage {
   tab: '案件';
   projectName: string;
   phoneNumber: string;
   price: string;
   description: string;
+  threadComments?: ThreadComment[];
 }
 
 export interface SimpleMessage extends BaseMessage {
