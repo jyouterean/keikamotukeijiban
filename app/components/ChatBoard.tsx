@@ -14,9 +14,10 @@ interface ChatBoardProps {
   nickname: string;
   account: UserAccount | null;
   onLogout: () => void;
+  onCreateAccount: () => void;
 }
 
-export default function ChatBoard({ nickname, account, onLogout }: ChatBoardProps) {
+export default function ChatBoard({ nickname, account, onLogout, onCreateAccount }: ChatBoardProps) {
   const [activeTab, setActiveTab] = useState<ChatTab>('案件');
   const [messages, setMessages] = useState<Message[]>([]);
   const [selectedThread, setSelectedThread] = useState<ProjectMessage | null>(null);
@@ -130,7 +131,7 @@ export default function ChatBoard({ nickname, account, onLogout }: ChatBoardProp
                 </div>
                 {!account && (
                   <button
-                    onClick={() => setIsAccountModalOpen(true)}
+                    onClick={onCreateAccount}
                     className="text-indigo-600 hover:text-indigo-700"
                   >
                     作成
@@ -152,12 +153,19 @@ export default function ChatBoard({ nickname, account, onLogout }: ChatBoardProp
                     </svg>
                   )}
                 </div>
-                {account && (
+                {account ? (
                   <button
                     onClick={() => setIsAccountModalOpen(true)}
                     className="rounded-lg bg-indigo-50 px-4 py-2 text-sm font-medium text-indigo-600 transition-colors hover:bg-indigo-100"
                   >
                     アカウント
+                  </button>
+                ) : (
+                  <button
+                    onClick={onCreateAccount}
+                    className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700"
+                  >
+                    アカウント作成
                   </button>
                 )}
                 <button

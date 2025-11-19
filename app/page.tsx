@@ -59,6 +59,10 @@ export default function Home() {
     }
   };
 
+  const handleCreateAccount = () => {
+    setAppState('accountForm');
+  };
+
   const handleLogout = () => {
     if (confirm('ログアウトしますか？')) {
       localStorage.removeItem('nickname');
@@ -101,6 +105,7 @@ export default function Home() {
         nickname={nickname}
         account={account}
         onLogout={handleLogout}
+        onCreateAccount={handleCreateAccount}
       />
     );
   }
