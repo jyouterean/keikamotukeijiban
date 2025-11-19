@@ -4,9 +4,10 @@ import { useState } from 'react';
 
 interface NicknameSetupProps {
   onComplete: (nickname: string) => void;
+  onLogin: () => void;
 }
 
-export default function NicknameSetup({ onComplete }: NicknameSetupProps) {
+export default function NicknameSetup({ onComplete, onLogin }: NicknameSetupProps) {
   const [nickname, setNickname] = useState('');
   const [error, setError] = useState('');
 
@@ -34,7 +35,7 @@ export default function NicknameSetup({ onComplete }: NicknameSetupProps) {
           <p className="text-gray-600">ご利用前にニックネームを設定してください</p>
         </div>
         
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="nickname" className="mb-2 block text-sm font-medium text-gray-700">
               ニックネーム
@@ -62,6 +63,23 @@ export default function NicknameSetup({ onComplete }: NicknameSetupProps) {
             className="w-full rounded-lg bg-indigo-600 px-4 py-3 font-semibold text-white transition-colors hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
           >
             チャットを始める
+          </button>
+
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-300"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="bg-white px-2 text-gray-500">または</span>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={onLogin}
+            className="w-full rounded-lg border-2 border-indigo-600 bg-white px-4 py-3 font-semibold text-indigo-600 transition-colors hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          >
+            ログイン（アカウント作成）
           </button>
         </form>
       </div>
