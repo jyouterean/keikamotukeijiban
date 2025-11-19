@@ -7,6 +7,7 @@ import SimpleForm from './SimpleForm';
 import MessageList from './MessageList';
 import ThreadModal from './ThreadModal';
 import MobileFormModal from './MobileFormModal';
+import MobileSimpleForm from './MobileSimpleForm';
 import AccountModal from './AccountModal';
 import { useIsMobile } from '../hooks/useMediaQuery';
 
@@ -217,33 +218,50 @@ export default function ChatBoard({ nickname, account, onLogout, onCreateAccount
 
       {/* Main Content */}
       <div className="mx-auto flex h-full w-full max-w-6xl flex-col overflow-hidden">
-        <div className="flex flex-1 overflow-hidden">
-          {/* Messages Area */}
-          <MessageList 
-            messages={filteredMessages} 
-            activeTab={activeTab}
-            onOpenThread={handleOpenThread}
-          />
-
-          {/* Input Form Area (PC only) */}
-          {!isMobile && (
-            <div className="w-96 border-l border-gray-200 bg-white">
-              {activeTab === '案件' ? (
-                <ProjectForm nickname={nickname || ''} onSubmit={handleAddMessage} />
-              ) : (
-                <SimpleForm 
-                  nickname={nickname || ''} 
-                  tab={activeTab} 
-                  onSubmit={handleAddMessage}
-                />
-              )}
+        {isMobile && activeTab === '雑談' ? (
+          /* Mobile Chat Layout with Fixed Input */
+          <div className="flex flex-1 flex-col overflow-hidden">
+            <div className="flex-1 overflow-hidden">
+              <MessageList 
+                messages={filteredMessages} 
+                activeTab={activeTab}
+                onOpenThread={handleOpenThread}
+              />
             </div>
-          )}
-        </div>
+            <MobileSimpleForm 
+              nickname={nickname || ''} 
+              onSubmit={handleAddMessage}
+            />
+          </div>
+        ) : (
+          <div className="flex flex-1 overflow-hidden">
+            {/* Messages Area */}
+            <MessageList 
+              messages={filteredMessages} 
+              activeTab={activeTab}
+              onOpenThread={handleOpenThread}
+            />
+
+            {/* Input Form Area (PC only) */}
+            {!isMobile && (
+              <div className="w-96 border-l border-gray-200 bg-white">
+                {activeTab === '案件' ? (
+                  <ProjectForm nickname={nickname || ''} onSubmit={handleAddMessage} />
+                ) : (
+                  <SimpleForm 
+                    nickname={nickname || ''} 
+                    tab={activeTab} 
+                    onSubmit={handleAddMessage}
+                  />
+                )}
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
-      {/* Mobile Floating Button */}
-      {isMobile && (
+      {/* Mobile Floating Button (案件タブのみ) */}
+      {isMobile && activeTab === '案件' && (
         <button
           onClick={() => setIsMobileFormOpen(true)}
           className="fixed bottom-6 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-indigo-600 text-white shadow-lg transition-transform hover:scale-110 active:scale-95"
@@ -254,14 +272,16 @@ export default function ChatBoard({ nickname, account, onLogout, onCreateAccount
         </button>
       )}
 
-      {/* Mobile Form Modal */}
-      <MobileFormModal
-        isOpen={isMobileFormOpen}
-        onClose={() => setIsMobileFormOpen(false)}
-        nickname={nickname || ''}
-        activeTab={activeTab}
-        onSubmit={handleAddMessage}
-      />
+      {/* Mobile Form Modal (案件タブのみ) */}
+      {activeTab === '案件' && (
+        <MobileFormModal
+          isOpen={isMobileFormOpen}
+          onClose={() => setIsMobileFormOpen(false)}
+          nickname={nickname || ''}
+          activeTab={activeTab}
+          onSubmit={handleAddMessage}
+        />
+      )}
 
       {/* Thread Modal */}
       {selectedThread && (
