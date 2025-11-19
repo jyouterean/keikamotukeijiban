@@ -1,0 +1,13 @@
+# SEO: 検索エンジンクローラー向け設定
+# UI/UX変更なし - robots.txtの追加のみ
+
+# すべての検索エンジンに対してクロールを許可
+User-agent: *
+Allow: /
+
+# サイトマップの場所を指定
+Sitemap: https://keikamotukeijiban.vercel.app/sitemap.xml
+
+# クロール頻度の調整（オプション）
+# Crawl-delay: 1
+

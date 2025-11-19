@@ -110,7 +110,7 @@ export default function ChatBoard({ nickname, account, onLogout, onCreateAccount
   return (
     <div className="flex h-screen flex-col bg-gray-50">
       {/* Header */}
-      <header className="bg-white shadow-sm">
+      <header className="bg-white shadow-sm" role="banner">
         <div className="mx-auto max-w-6xl px-4 py-3">
           {isMobile ? (
             /* Mobile Header */
@@ -151,8 +151,8 @@ export default function ChatBoard({ nickname, account, onLogout, onCreateAccount
                 <div className="flex items-center gap-2">
                   <span className="text-gray-600">ネーム:</span>
                   <span className="font-semibold text-gray-800">{nickname || '未設定'}</span>
-                  {account?.verified && (
-                    <svg className="h-4 w-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                      {account?.verified && (
+                    <svg className="h-4 w-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20" aria-label="認証済みアカウント" role="img">
                       <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                     </svg>
                   )}
@@ -178,7 +178,7 @@ export default function ChatBoard({ nickname, account, onLogout, onCreateAccount
                       <span className="text-sm text-gray-600">ニックネーム:</span>
                       <span className="font-semibold text-gray-800">{nickname}</span>
                       {account?.verified && (
-                        <svg className="h-5 w-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                        <svg className="h-5 w-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20" aria-label="認証済みアカウント" role="img">
                           <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                         </svg>
                       )}
@@ -222,7 +222,7 @@ export default function ChatBoard({ nickname, account, onLogout, onCreateAccount
       {/* Tabs */}
       <div className="border-b border-gray-200 bg-white">
         <div className="mx-auto max-w-6xl px-4">
-          <div className="flex gap-2">
+          <div className="flex gap-2" role="tablist" aria-label="チャットタブ">
             {tabs.map(tab => (
               <button
                 key={tab}
@@ -232,10 +232,13 @@ export default function ChatBoard({ nickname, account, onLogout, onCreateAccount
                     ? 'text-indigo-600'
                     : 'text-gray-600 hover:text-gray-800'
                 }`}
+                role="tab"
+                aria-selected={activeTab === tab}
+                aria-label={`${tab}タブ`}
               >
                 {tab}
                 {activeTab === tab && (
-                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600" />
+                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600" aria-hidden="true" />
                 )}
               </button>
             ))}
@@ -296,8 +299,9 @@ export default function ChatBoard({ nickname, account, onLogout, onCreateAccount
         <button
           onClick={() => setIsMobileFormOpen(true)}
           className="fixed bottom-6 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-indigo-600 text-white shadow-lg transition-transform hover:scale-110 active:scale-95"
+          aria-label="案件を投稿"
         >
-          <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
           </svg>
         </button>

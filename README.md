@@ -96,6 +96,33 @@ npm start
 - **Tailwind CSS 4** - スタイリング
 - **localStorage** - データ永続化
 
+## SEO最適化
+
+### メタデータ
+- **title**: 軽貨物掲示板｜全国の案件・求人情報が集まる無料掲示板
+- **description**: 軽貨物ドライバーと荷主・元請けをつなぐ無料掲示板の説明
+- **keywords**: 軽貨物、掲示板、案件、求人、ドライバー、配送、運送など
+- **Open Graph**: Facebook/SNSシェア対応
+- **Twitter Card**: Twitterシェア対応（summary_large_image）
+- **canonical**: 正規URL設定
+
+### 構造化データ（JSON-LD）
+- **WebSite**: サイト情報と検索アクション
+- **Organization**: 組織情報
+- **DiscussionForumPosting**: 掲示板情報
+- **BreadcrumbList**: パンくずリスト
+
+### クローラー対応
+- **robots.txt**: 全ページクロール許可
+- **sitemap.xml**: 自動生成サイトマップ
+- **meta robots**: Googlebot向け最適化設定
+
+### アクセシビリティ
+- **aria-label**: すべてのボタンとSVGアイコンにラベル追加
+- **role属性**: main, banner, tablist, tab, form
+- **aria-selected**: タブの選択状態
+- **aria-hidden**: 装飾的なSVGに設定
+
 ## プロジェクト構造
 
 ```
@@ -106,16 +133,24 @@ keijiban-board/
 │   │   ├── MessageList.tsx      # メッセージ一覧表示
 │   │   ├── NicknameSetup.tsx    # ニックネーム設定
 │   │   ├── ProjectForm.tsx      # 案件投稿フォーム
-│   │   ├── SimpleForm.tsx       # 雑談・詐欺投稿フォーム
+│   │   ├── SimpleForm.tsx       # 雑談投稿フォーム
+│   │   ├── MobileSimpleForm.tsx # スマホ用LINE風フォーム
 │   │   ├── ThreadModal.tsx      # スレッドモーダル
-│   │   └── MobileFormModal.tsx  # スマホ用フォームモーダル
+│   │   ├── MobileFormModal.tsx  # スマホ用フォームモーダル
+│   │   ├── AccountForm.tsx      # アカウント作成フォーム
+│   │   ├── AccountModal.tsx     # アカウント情報表示
+│   │   └── JsonLd.tsx           # SEO: 構造化データ
 │   ├── hooks/                   # カスタムフック
 │   │   └── useMediaQuery.ts     # レスポンシブ判定フック
+│   ├── utils/                   # ユーティリティ
+│   │   └── accountStorage.ts    # アカウントストレージ管理
 │   ├── types.ts                 # TypeScript型定義
 │   ├── globals.css              # グローバルスタイル
-│   ├── layout.tsx               # ルートレイアウト
-│   └── page.tsx                 # メインページ
-├── public/                      # 静的ファイル
+│   ├── layout.tsx               # ルートレイアウト（SEO最適化済み）
+│   ├── page.tsx                 # メインページ
+│   └── sitemap.ts               # SEO: サイトマップ自動生成
+├── public/
+│   └── robots.txt               # SEO: クローラー設定
 ├── package.json                 # プロジェクト設定
 └── tsconfig.json               # TypeScript設定
 ```
