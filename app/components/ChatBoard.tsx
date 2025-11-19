@@ -119,20 +119,29 @@ export default function ChatBoard({ nickname, account, onLogout, onCreateAccount
               <div className="flex items-center justify-between">
                 <h1 className="text-lg font-bold text-gray-800">軽貨物掲示板</h1>
                 <div className="flex items-center gap-2">
-                  {nickname && account && (
+                  {nickname ? (
+                    <>
+                      {account && (
+                        <button
+                          onClick={() => setIsAccountModalOpen(true)}
+                          className="rounded-lg bg-indigo-50 px-3 py-1.5 text-sm font-medium text-indigo-600 transition-colors hover:bg-indigo-100"
+                        >
+                          アカウント
+                        </button>
+                      )}
+                      <button
+                        onClick={onLogout}
+                        className="rounded-lg bg-gray-200 px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-300"
+                      >
+                        ログアウト
+                      </button>
+                    </>
+                  ) : (
                     <button
-                      onClick={() => setIsAccountModalOpen(true)}
-                      className="rounded-lg bg-indigo-50 px-3 py-1.5 text-sm font-medium text-indigo-600 transition-colors hover:bg-indigo-100"
+                      onClick={onShowNicknameSetup}
+                      className="rounded-lg bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-indigo-700"
                     >
-                      アカウント
-                    </button>
-                  )}
-                  {nickname && (
-                    <button
-                      onClick={onLogout}
-                      className="rounded-lg bg-gray-200 px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-300"
-                    >
-                      ログアウト
+                      ログイン
                     </button>
                   )}
                 </div>
@@ -163,36 +172,45 @@ export default function ChatBoard({ nickname, account, onLogout, onCreateAccount
             <div className="flex items-center justify-between py-1">
               <h1 className="text-2xl font-bold text-gray-800">軽貨物掲示板</h1>
               <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-gray-600">ニックネーム:</span>
-                  <span className="font-semibold text-gray-800">{nickname || '未設定'}</span>
-                  {account?.verified && (
-                    <svg className="h-5 w-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                    </svg>
-                  )}
-                </div>
-                {account ? (
+                {nickname ? (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-gray-600">ニックネーム:</span>
+                      <span className="font-semibold text-gray-800">{nickname}</span>
+                      {account?.verified && (
+                        <svg className="h-5 w-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                      )}
+                    </div>
+                    {account ? (
+                      <button
+                        onClick={() => setIsAccountModalOpen(true)}
+                        className="rounded-lg bg-indigo-50 px-4 py-2 text-sm font-medium text-indigo-600 transition-colors hover:bg-indigo-100"
+                      >
+                        アカウント
+                      </button>
+                    ) : (
+                      <button
+                        onClick={onCreateAccount}
+                        className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700"
+                      >
+                        アカウント作成
+                      </button>
+                    )}
+                    <button
+                      onClick={onLogout}
+                      className="rounded-lg bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-300"
+                    >
+                      ログアウト
+                    </button>
+                  </>
+                ) : (
                   <button
-                    onClick={() => setIsAccountModalOpen(true)}
-                    className="rounded-lg bg-indigo-50 px-4 py-2 text-sm font-medium text-indigo-600 transition-colors hover:bg-indigo-100"
-                  >
-                    アカウント
-                  </button>
-                ) : nickname && (
-                  <button
-                    onClick={onCreateAccount}
+                    onClick={onShowNicknameSetup}
                     className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700"
                   >
-                    アカウント作成
-                  </button>
-                )}
-                {nickname && (
-                  <button
-                    onClick={onLogout}
-                    className="rounded-lg bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-300"
-                  >
-                    ログアウト
+                    ログイン / アカウント作成
                   </button>
                 )}
               </div>
